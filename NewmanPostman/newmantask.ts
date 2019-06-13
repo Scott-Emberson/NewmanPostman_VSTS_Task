@@ -32,13 +32,30 @@ function GetToolRunner(collectionToRun: string) {
 
     let reporterHtmlTemplate = tl.getPathInput('reporterHtmlTemplate', false, true);
     newman.argIf(typeof reporterHtmlTemplate != 'undefined' && tl.filePathSupplied('reporterHtmlTemplate'), ['--reporter-html-template', reporterHtmlTemplate]);
-    let reporterHtmlExport = tl.getPathInput('reporterHtmlExport');
-    newman.argIf(typeof reporterHtmlExport != 'undefined' && tl.filePathSupplied('reporterHtmlExport'), ['--reporter-html-export', reporterHtmlExport]);
-    let reporterJsonExport = tl.getPathInput('reporterJsonExport');
-    newman.argIf(typeof reporterJsonExport != 'undefined' && tl.filePathSupplied('reporterJsonExport'), ['--reporter-json-export', reporterJsonExport]);
-    let reporterJUnitExport = tl.getPathInput('reporterJUnitExport', false, false);
-    newman.argIf(typeof reporterJUnitExport != 'undefined' && tl.filePathSupplied('reporterJUnitExport'), ['--reporter-junit-export', reporterJUnitExport]);
 
+    let reporterReportNameToCollectionName = tl.getBoolInput('reporterReportNameToCollectionName');
+    if (reporterReportNameToCollectionName === true) {
+        let reporterHtmlExport = tl.getPathInput('reporterHtmlExport');
+        newman.argIf(typeof reporterHtmlExport != 'undefined' && tl.filePathSupplied('reporterHtmlExport'.concat("\\",collectionToRun.toString())),
+            ['--reporter-html-export', reporterHtmlExport]);
+        let reporterJsonExport = tl.getPathInput('reporterJsonExport');
+        newman.argIf(typeof reporterJsonExport != 'undefined' && tl.filePathSupplied('reporterJsonExport'.concat("\\",collectionToRun.toString())),
+            ['--reporter-json-export', reporterJsonExport]);
+        let reporterJUnitExport = tl.getPathInput('reporterJUnitExport', false, false);
+        newman.argIf(typeof reporterJUnitExport != 'undefined' && tl.filePathSupplied('reporterJUnitExport'.concat("\\",collectionToRun.toString())),
+            ['--reporter-junit-export', reporterJUnitExport]);
+    } else {
+
+        let reporterHtmlExport = tl.getPathInput('reporterHtmlExport');
+        newman.argIf(typeof reporterHtmlExport != 'undefined' && tl.filePathSupplied('reporterHtmlExport'),
+            ['--reporter-html-export', reporterHtmlExport]);
+        let reporterJsonExport = tl.getPathInput('reporterJsonExport');
+        newman.argIf(typeof reporterJsonExport != 'undefined' && tl.filePathSupplied('reporterJsonExport'),
+            ['--reporter-json-export', reporterJsonExport]);
+        let reporterJUnitExport = tl.getPathInput('reporterJUnitExport', false, false);
+        newman.argIf(typeof reporterJUnitExport != 'undefined' && tl.filePathSupplied('reporterJUnitExport'),
+            ['--reporter-junit-export', reporterJUnitExport]);
+    }
     let reporterList = tl.getInput('reporters');
     let customReporter = tl.getInput('customReporter');
     let newReporterList = "";
